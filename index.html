@@ -308,6 +308,24 @@
     /* ── Slide number ── */
     .reveal .slide-number { font-size: 0.7em; color: var(--text-tertiary); }
 
+    /* ── Scrollable slides ── */
+    .reveal .slides section {
+      overflow-y: auto !important;
+      max-height: 100vh;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.2) transparent;
+    }
+    .reveal .slides section::-webkit-scrollbar {
+      width: 6px;
+    }
+    .reveal .slides section::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .reveal .slides section::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+    }
+
     /* ── Full width helper ── */
     .full-width {
       width: 100%;
@@ -667,9 +685,9 @@
       transitionSpeed: 'default',
       backgroundTransition: 'fade',
       width: 1200,
-      height: 700,
-      margin: 0.1,
-      center: true,
+      height: '100%',
+      margin: 0.05,
+      center: false,
     });
   </script>
 </body>
