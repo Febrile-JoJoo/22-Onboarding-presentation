@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>코드화 패턴: 비개발자가 AI를 다루는 새로운 패러다임</title>
+  <link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
+  <link rel="stylesheet" href="node_modules/reveal.js/dist/theme/black.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap');
+
+    :root {
+      --navy: #1E2761;
+      --ice: #CADCFC;
+      --accent: #3B82F6;
+      --red: #DC2626;
+      --green: #16A34A;
+      --amber: #F59E0B;
+      --purple: #7C3AED;
+    }
+
+    .reveal {
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 900;
+      text-transform: none;
+    }
+
+    .reveal h1 { font-size: 2.5em; }
+    .reveal h2 { font-size: 1.8em; }
+    .reveal h3 { font-size: 1.3em; }
+
+    /* Slide backgrounds */
+    .slide-title { background: linear-gradient(135deg, #0F1535 0%, #1E2761 100%) !important; }
+    .slide-normal { background: #FFFFFF !important; }
+    .slide-conclusion { background: linear-gradient(135deg, #0F1535 0%, #1E2761 100%) !important; }
+
+    /* Cards */
+    .card {
+      background: #F8FAFC;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .card-red { border-left: 6px solid var(--red); background: #FEF2F2; }
+    .card-green { border-left: 6px solid var(--green); background: #F0FDF4; }
+    .card-blue { border-left: 6px solid var(--accent); background: #EFF6FF; }
+    .card-amber { border-left: 6px solid var(--amber); background: #FFFBEB; }
+    .card-purple { border-left: 6px solid var(--purple); background: #F5F3FF; }
+
+    /* Stats */
+    .stat-number {
+      font-size: 3em;
+      font-weight: 900;
+      color: var(--accent);
+      margin: 0;
+    }
+    .stat-label {
+      font-size: 1.1em;
+      color: #64748B;
+      margin-top: 5px;
+    }
+
+    /* Flow */
+    .flow-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .flow-step {
+      background: var(--navy);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.85em;
+      font-weight: 700;
+      min-width: 100px;
+      text-align: center;
+    }
+    .flow-step:last-child { background: var(--green); }
+    .flow-arrow { color: #94A3B8; font-size: 1.5em; }
+
+    /* Before/After */
+    .before-after {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .before-box, .after-box {
+      flex: 1;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    .before-box { background: #FEF2F2; }
+    .after-box { background: #F0FDF4; }
+
+    /* Bar chart */
+    .bar-chart {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin: 6px 0;
+    }
+    .bar-label {
+      width: 160px;
+      text-align: right;
+      padding-right: 15px;
+      font-size: 0.85em;
+      font-weight: 700;
+      color: #374151;
+    }
+    .bar-track {
+      flex: 1;
+      height: 24px;
+      background: #F1F5F9;
+      border-radius: 4px;
+      position: relative;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      font-size: 0.75em;
+      font-weight: 700;
+      color: white;
+    }
+    .bar-price {
+      width: 100px;
+      text-align: left;
+      padding-left: 10px;
+      font-size: 0.75em;
+      color: #64748B;
+    }
+
+    /* Two columns */
+    .two-cols {
+      display: flex;
+      gap: 20px;
+    }
+    .two-cols > div { flex: 1; }
+
+    /* Benefits */
+    .benefits {
+      display: flex;
+      gap: 15px;
+    }
+    .benefit-card {
+      flex: 1;
+      background: #F8FAFC;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+    }
+    .benefit-num { font-size: 2em; font-weight: 900; margin-bottom: 5px; }
+    .benefit-title { font-size: 1.1em; font-weight: 700; color: #1E2761; margin-bottom: 8px; }
+    .benefit-desc { font-size: 0.85em; color: #64748B; }
+
+    /* Principles */
+    .principle {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      background: #F8FAFC;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 8px 0;
+      border-left: 6px solid;
+    }
+    .principle-icon {
+      font-size: 1.5em;
+      font-weight: 900;
+      min-width: 60px;
+    }
+    .principle-content { text-align: left; }
+    .principle-title { font-weight: 700; font-size: 1.1em; margin-bottom: 4px; }
+    .principle-sub { font-size: 0.9em; color: #374151; margin-bottom: 4px; }
+    .principle-ex { font-size: 0.8em; color: #64748B; }
+
+    /* Code comparison */
+    .code-box {
+      background: #1E293B;
+      color: #E2E8F0;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.8em;
+      text-align: left;
+      margin: 10px 0;
+    }
+    .code-red { border: 2px solid var(--red); }
+    .code-green { border: 2px solid var(--green); }
+
+    /* Highlight text */
+    .text-red { color: var(--red); font-weight: 700; }
+    .text-green { color: var(--green); font-weight: 700; }
+    .text-accent { color: var(--accent); font-weight: 700; }
+    .text-amber { color: var(--amber); font-weight: 700; }
+    .text-purple { color: var(--purple); font-weight: 700; }
+
+    /* Comparison table */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em;
+    }
+    .comp-table th {
+      background: var(--navy);
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+    .comp-table td {
+      padding: 8px 10px;
+      text-align: center;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .comp-table tr:nth-child(even) { background: #F8FAFC; }
+    .comp-table tr:last-child td { background: #F0FDF4; color: var(--green); font-weight: 700; }
+
+    /* Slide number */
+    .reveal .slide-number { font-size: 0.7em; }
+
+    /* Subtitle */
+    .subtitle {
+      font-size: 1.2em;
+      color: #CADCFC;
+      margin-top: 10px;
+    }
+
+    /* Humor */
+    .humor {
+      font-size: 0.95em;
+      color: var(--amber);
+      font-style: italic;
+      margin-top: 15px;
+    }
+
+    /* Divider */
+    .divider {
+      width: 100px;
+      height: 3px;
+      background: var(--accent);
+      margin: 15px auto;
+    }
+
+    /* Small text */
+    .small { font-size: 0.75em; color: #94A3B8; }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 700;
+    }
+    .badge-new { background: var(--green); }
+
+    /* Footer */
+    .slide-footer {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.65em;
+      color: #94A3B8;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- SLIDE 1: Title -->
+      <section data-background="linear-gradient(135deg, #0F1535 0%, #1E2761 100%)">
+        <h1 style="color: white; font-size: 2.8em;">코드화 패턴</h1>
+        <p class="subtitle">비개발자가 AI를 다루는 새로운 패러다임</p>
+        <div class="divider"></div>
+        <p style="color: #94A3B8; font-size: 0.9em;">GPTers 22기 베스트 사례 발표</p>
+        <p style="color: #94A3B8; font-size: 0.9em;">DY Cho (조셉)</p>
+        <p class="humor">"코드를 모르지만, 코드를 만들었습니다"</p>
+      </section>
+
+      <!-- SLIDE 2: Opening -->
+      <section>
+        <h2>오프닝: Parker 의자 장면</h2>
+        <div class="divider"></div>
+        <p style="font-size: 1.4em; font-weight: 900; color: #1E2761;">"의자 = 방패와 창"</p>
+        <br>
+        <p>Parker(2013) 영화에서 의자는 단순한 가구가 아니었다.</p>
+        <p>방어의 방패이자 공격의 창이었다.</p>
+        <br>
+        <p class="humor">저는 AI를 그냥 '시켜 먹는' 도구로 썼습니다.</p>
+        <p class="humor" style="color: #DC2626; font-weight: 700;">그러다 $100이 하루만에 사라졌습니다.</p>
+        <br>
+        <p style="font-size: 1.2em; font-weight: 700; color: #3B82F6;">AI도 마찬가지다.</p>
+        <p style="font-size: 1.2em; font-weight: 700; color: #3B82F6;">도구로 소비하지 말고, 시스템으로 설계하라.</p>
+      </section>
+
+      <!-- SLIDE 3: Problem Definition -->
+      <section>
+        <h2>문제 정의</h2>
+        <p style="color: #64748B; font-size: 0.9em;">MD 강제성이 모델별로 달라서 토큰비 낭비 커짐</p>
+        <div class="divider"></div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Claude Opus 4</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 100%; background: #1E2761;">100%</div></div>
+            <div class="bar-price">$15/$75</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">GPT-5</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 8%; background: #2563EB;">8%</div></div>
+            <div class="bar-price">$1.25/$10</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Gemini 2.5 Pro</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 8%; background: #7C3AED;">8%</div></div>
+            <div class="bar-price">$1.25/$10</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">DeepSeek V4 Pro</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 3%; background: #0891B2;">3%</div></div>
+            <div class="bar-price">$0.435/$0.87</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">MiMo 2.5 Pro</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 3%; background: #F59E0B;">3%</div></div>
+            <div class="bar-price">$0.435/$0.87</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">코드화 (Python)</div>
+            <div class="bar-track"><div class="bar-fill" style="width: 3%; background: #16A34A;">0% ★</div></div>
+            <div class="bar-price">$0</div>
+          </div>
+        </div>
+        <p class="small" style="margin-top: 15px;">* 비용 = Claude Opus 4 대비 상대적 토큰 비용 (%) &nbsp; ★ = 토큰비 0, 강제성 무관</p>
+      </section>
+
+      <!-- SLIDE 4: Billing Structure + Thinking Tokens -->
+      <section>
+        <h2>AI 과금 구조</h2>
+        <p style="color: #64748B; font-size: 0.9em;">숨겨진 비용: Thinking 토큰</p>
+        <div class="divider"></div>
+        <p style="font-size: 0.85em;">
+          <span style="font-weight: 700; color: #1E2761;">Input (입력):</span> 사용자 프롬프트 → input 가격 &nbsp;&nbsp;
+          <span style="font-weight: 700; color: #1E2761;">Output (출력):</span> 모델 응답 → output 가격
+        </p>
+        <p style="font-size: 0.85em;">
+          <span style="font-weight: 700; color: #DC2626;">Thinking (추론):</span> <span class="text-red">모델의 내부 추론 → output 가격으로 과금 (input 아님!)</span>
+        </p>
+
+        <div class="two-cols" style="margin-top: 15px;">
+          <div class="card card-red">
+            <h3 style="text-align: center; color: #DC2626;">Thinking 포함 ($0.27/회)</h3>
+            <p style="font-size: 0.8em;">입력 1,000 + thinking 10,000 + 출력 500 토큰</p>
+            <p style="font-size: 1.1em; font-weight: 900; color: #DC2626; text-align: center;">$100으로 약 374번 대화</p>
+            <p style="font-size: 0.8em; font-weight: 700;">이런 작업에 thinking 발생:</p>
+            <p style="font-size: 0.75em; color: #64748B;">분석 · 기획 · 추론 · 창작<br>(사업 모델 분석, 코드 디버깅, 전략 수립 등)</p>
+          </div>
+          <div class="card card-green">
+            <h3 style="text-align: center; color: #16A34A;">Thinking 없이 ($0.02/회)</h3>
+            <p style="font-size: 0.8em;">입력 1,000 + 출력 500 토큰</p>
+            <p style="font-size: 1.1em; font-weight: 900; color: #16A34A; text-align: center;">$100으로 약 5,714번 대화</p>
+            <p style="font-size: 0.8em; font-weight: 700;">이런 작업은 thinking 없음:</p>
+            <p style="font-size: 0.75em; color: #64748B;">옮기기 · 분류 · 설명 · 생성<br>(번역, 요약, 형식 변환, 용어 설명 등)</p>
+          </div>
+        </div>
+
+        <div style="background: #1E2761; color: white; padding: 8px 25px; border-radius: 8px; display: inline-block; margin-top: 15px; font-weight: 900; font-size: 1.2em;">
+          15배 차이!
+        </div>
+
+        <div class="card card-blue" style="margin-top: 15px; text-align: center;">
+          <p style="font-size: 0.85em;"><span style="font-weight: 700; color: #1E2761;">프레임워크도 코드화 가능</span> &nbsp; ZEN 큐브 6면 완성 여부, BOS 박스 분석 완료 여부 등 → 코드가 즉시 검증 → AI에게 입력값 전달 → AI는 내용 생성·전략 수립에 집중</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Why Code? -->
+      <section>
+        <h2>왜 코드화인가? — 3가지 이익</h2>
+        <p style="color: #64748B; font-size: 0.9em;">Claude Opus 4 기준 상대적 토큰 비용</p>
+        <div class="divider"></div>
+
+        <table class="comp-table">
+          <tr>
+            <th>모델</th>
+            <th>상대 비용</th>
+            <th>MD 강제성</th>
+            <th>비고</th>
+          </tr>
+          <tr><td>Claude Opus 4</td><td>100%</td><td>★★★★★</td><td>기준. 비쌈</td></tr>
+          <tr><td>Claude Sonnet 4</td><td>20%</td><td>★★★★★</td><td>Opus와 동등 강제성</td></tr>
+          <tr><td>GPT-5 / Gemini Pro</td><td>8%</td><td>★★★★☆</td><td>높은 강제성</td></tr>
+          <tr><td>DeepSeek V4 Pro</td><td>3%</td><td>★★★☆☆</td><td>중간 강제성</td></tr>
+          <tr><td>MiMo 2.5 Pro</td><td>3%</td><td>★★☆☆☆</td><td>낮은 강제성</td></tr>
+          <tr><td>코드화 (Python)</td><td>0%</td><td>항상 동일</td><td>강제성 무관</td></tr>
+        </table>
+
+        <div class="benefits" style="margin-top: 15px;">
+          <div class="benefit-card" style="border-top: 4px solid #3B82F6;">
+            <div class="benefit-num" style="color: #3B82F6;">97%</div>
+            <div class="benefit-title">토큰비 절감</div>
+            <div class="benefit-desc">Thinking 토큰 비용 0</div>
+          </div>
+          <div class="benefit-card" style="border-top: 4px solid #16A34A;">
+            <div class="benefit-num" style="color: #16A34A;">100%</div>
+            <div class="benefit-title">검증 일관성</div>
+            <div class="benefit-desc">모델마다 다른 해석 → 통일</div>
+          </div>
+          <div class="benefit-card" style="border-top: 4px solid #F59E0B;">
+            <div class="benefit-num" style="color: #F59E0B;">∞</div>
+            <div class="benefit-title">모델 변경 무관</div>
+            <div class="benefit-desc">새 모델이 나와도 유지</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Code Pattern Essence -->
+      <section>
+        <h2>코드화 패턴의 본질</h2>
+        <div class="divider"></div>
+        <p style="font-size: 1.1em; font-weight: 700; color: #1E2761;">코드화 =</p>
+        <p>AI가 반복 검증할 <span class="text-accent">"입력값"</span>을 만드는 것</p>
+        <p>= 검증 툴체인을 구축하는 것</p>
+        <p>= 비개발자의 시간·에너지를 절약하면서 AI의 판단력은 유지하는 것</p>
+
+        <div class="two-cols" style="margin-top: 20px;">
+          <div class="card card-red">
+            <h3 style="text-align: center; color: #DC2626;">최종값 패턴 (X)</h3>
+            <div class="flow-container" style="margin: 10px 0;">
+              <div class="flow-step" style="font-size: 0.75em;">PDF 규칙</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" style="font-size: 0.75em;">Python 코드</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" style="font-size: 0.75em; background: #DC2626;">통과/위반</div>
+            </div>
+            <p style="text-align: center; font-size: 0.85em; color: #DC2626; font-weight: 700;">최종 판정 (AI 판단 없음, 경직됨)</p>
+            <p style="text-align: center; font-size: 0.75em; color: #64748B;">상황-맥락 무시 · 예외 판단 불가</p>
+          </div>
+          <div class="card card-green">
+            <h3 style="text-align: center; color: #16A34A;">입력값 패턴 (O)</h3>
+            <div class="flow-container" style="margin: 10px 0;">
+              <div class="flow-step" style="font-size: 0.75em;">PDF 규칙</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" style="font-size: 0.75em;">Python 코드</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" style="font-size: 0.75em;">입력값</div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" style="font-size: 0.75em; background: #16A34A;">AI 판단</div>
+            </div>
+            <p style="text-align: center; font-size: 0.85em; color: #16A34A; font-weight: 700;">상황-맥락 고려, 예외 판단 가능, 유연함</p>
+            <p style="text-align: center; font-size: 0.75em; color: #64748B;">비개발자가 "절대적"이라 정의 안 해도 됨</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: 공조검규 -->
+      <section>
+        <h2>공조검규: 코드화의 4가지 전제 조건 <span class="badge badge-new">NEW</span></h2>
+        <p style="color: #64748B; font-size: 0.9em;">코드화할 수 있는 것 vs 없는 것</p>
+        <div class="divider"></div>
+
+        <div class="principle" style="border-color: #3B82F6;">
+          <div class="principle-icon" style="color: #3B82F6;">공식化</div>
+          <div class="principle-content">
+            <div class="principle-title">이 계산으로 결과를 냄</div>
+            <div class="principle-ex">키워드 밀도 = 키워드 수 / 전체 단어 수 × 100</div>
+          </div>
+        </div>
+
+        <div class="principle" style="border-color: #16A34A;">
+          <div class="principle-icon" style="color: #16A34A;">조건化</div>
+          <div class="principle-content">
+            <div class="principle-title">이 조건이면 통과, 아니면 위반</div>
+            <div class="principle-ex">키워드 3개 이상이면 통과</div>
+          </div>
+        </div>
+
+        <div class="principle" style="border-color: #F59E0B;">
+          <div class="principle-icon" style="color: #F59E0B;">검증化</div>
+          <div class="principle-content">
+            <div class="principle-title">맞다/틀리다로 판별할 수 있어야 함</div>
+            <div class="principle-ex">코드화의 전제 조건 — 검증할 수 없는 것(감정, 창의성)은 코드화 불가</div>
+          </div>
+        </div>
+
+        <div class="principle" style="border-color: #7C3AED;">
+          <div class="principle-icon" style="color: #7C3AED;">규격化</div>
+          <div class="principle-content">
+            <div class="principle-title">이 형식이어야 함</div>
+            <div class="principle-ex">글자 수 500자 이상 2000자 이하</div>
+          </div>
+        </div>
+
+        <div style="background: #FEF2F2; padding: 10px; border-radius: 8px; margin-top: 12px;">
+          <p style="font-size: 0.85em; color: #DC2626; text-align: center;">
+            <span style="font-weight: 700;">코드화 불가:</span> 감정 · 창의성 · 맥락 판단 · 윤리적 해석 → AI의 판단력이 필요한 영역
+          </p>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Case Study — marketing_rules.py -->
+      <section>
+        <h2>실전 사례: marketing_rules.py</h2>
+        <div class="divider"></div>
+
+        <div class="flow-container">
+          <div class="flow-step">PDF 6권<br><span style="font-size: 0.7em; opacity: 0.8;">마케팅 전자책</span></div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">AI가 추출<br><span style="font-size: 0.7em; opacity: 0.8;">조건·공식·규격화</span></div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">비개발자 검토<br><span style="font-size: 0.7em; opacity: 0.8;">O/X 판단만</span></div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step">코드화<br><span style="font-size: 0.7em; opacity: 0.8;">Python 파일</span></div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step" style="background: #16A34A;">검증 자동화<br><span style="font-size: 0.7em; opacity: 0.8;">반복 실행</span></div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 8px;">
+          <div style="background: #DBEAFE; padding: 5px 15px; border-radius: 4px; font-size: 0.8em; color: #1E40AF;">◀──── 비개발자의 영역 ────▶</div>
+          <div style="background: #DCFCE7; padding: 5px 15px; border-radius: 4px; font-size: 0.8em; color: #166534;">◀──── AI의 영역 ────▶</div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 60px; margin-top: 20px;">
+          <div style="text-align: center;">
+            <div class="stat-number">100x</div>
+            <div class="stat-label">토큰비 절감</div>
+          </div>
+          <div style="text-align: center;">
+            <div class="stat-number">6권</div>
+            <div class="stat-label">PDF 규칙 코드화</div>
+          </div>
+          <div style="text-align: center;">
+            <div class="stat-number">301줄</div>
+            <div class="stat-label">Python 코드</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 15px; text-align: center;">
+          <p style="font-size: 0.9em;">비개발자가 <span class="text-accent">"이 규칙을 코드화해라"</span>라고 말하면</p>
+          <p style="font-size: 0.9em;">AI가 코드를 만들고, 비개발자는 검토·결정만.</p>
+          <p style="font-size: 0.9em; font-weight: 700; color: #1E2761;">이 과정이 "비개발자의 코드화"의 원형이다.</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Case Study — Before/After -->
+      <section>
+        <h2>실전 사례: 파일 의존성 구조</h2>
+        <div class="divider"></div>
+
+        <div class="before-after">
+          <div class="before-box">
+            <h3 style="text-align: center; color: #DC2626;">Before</h3>
+            <div style="background: #FCA5A5; padding: 10px; border-radius: 8px; text-align: center; font-weight: 700; color: #7F1D1D;">메모리 (87%)</div>
+            <div style="background: #FECACA; padding: 8px; border-radius: 6px; text-align: center; margin-top: 10px; font-size: 0.85em; color: #7F1D1D;">규칙 전체 저장 (13,151자)</div>
+            <p style="font-size: 0.85em; color: #374151; margin-top: 10px;">모델마다 해석 다름<br>중복 관리</p>
+          </div>
+          <div style="font-size: 2em; color: #3B82F6; align-self: center;">→</div>
+          <div class="after-box">
+            <h3 style="text-align: center; color: #16A34A;">After</h3>
+            <div style="background: #86EFAC; padding: 10px; border-radius: 8px; text-align: center; font-weight: 700; color: #14532D;">메모리 (55%)</div>
+            <div style="background: #BBF7D0; padding: 8px; border-radius: 6px; text-align: center; margin-top: 10px; font-size: 0.85em; color: #14532D;">"참조 한 줄"</div>
+            <div style="text-align: center; color: #94A3B8; margin: 5px 0;">↓</div>
+            <div style="background: #4ADE80; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.85em; color: #14532D;">Python 파일 (코드화)</div>
+            <p style="font-size: 0.85em; color: #374151; margin-top: 10px;">모델 독립성 확보<br>중복 제거 완료</p>
+          </div>
+        </div>
+
+        <div class="card card-blue" style="margin-top: 15px; text-align: center;">
+          <p style="font-size: 0.9em; font-weight: 700; color: #1E40AF;">핵심: "이 규칙 → 이 파일" 한 줄로 축약 = 코드화 + 축약</p>
+          <p style="font-size: 0.85em; color: #64748B;">코드화(2,443자) + 축약(2,326자) = 총 4,769자 절약</p>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Conclusion -->
+      <section data-background="linear-gradient(135deg, #0F1535 0%, #1E2761 100%)">
+        <h2 style="color: #CADCFC;">결론</h2>
+        <div class="divider"></div>
+        <p style="font-size: 1.5em; font-weight: 900; color: white;">"AI를 도구로 소비하지 말고<br>시스템으로 설계하라"</p>
+        <br>
+        <p style="font-size: 1em; color: #CADCFC;">쉽게 말하면,</p>
+        <p style="font-size: 1.2em; font-weight: 900; color: #F59E0B;">'시켜 먹지 말고 같이 일하라'는 겁니다.</p>
+        <br>
+        <p style="font-size: 0.95em; color: #CADCFC;">비개발자가 "시스템을 설계"하는 경험</p>
+        <p style="font-size: 0.95em; color: #CADCFC;">AI가 "검증 툴체인"을 구축하는 것</p>
+        <p style="font-size: 0.95em; color: #CADCFC;">코드화된 결과가 "입력값"으로서 AI가 판단하는 것</p>
+        <div class="divider" style="margin-top: 25px;"></div>
+        <p style="color: #94A3B8;">감사합니다</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="node_modules/reveal.js/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      width: 1200,
+      height: 700,
+      margin: 0.1,
+      center: true,
+    });
+  </script>
+</body>
+</html>
