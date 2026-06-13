@@ -688,7 +688,27 @@
       height: '100%',
       margin: 0.05,
       center: false,
+      mouseWheel: false,
     });
+
+    // Allow scroll within overflowing slides
+    document.addEventListener('wheel', function(e) {
+      const section = document.querySelector('section.present');
+      if (!section) return;
+      const isOverflowing = section.scrollHeight > section.clientHeight;
+      if (!isOverflowing) return;
+
+      const atTop = section.scrollTop <= 0;
+      const atBottom = section.scrollTop + section.clientHeight >= section.scrollHeight - 2;
+
+      if (e.deltaY > 0 && !atBottom) {
+        section.scrollTop += e.deltaY;
+        e.stopPropagation();
+      } else if (e.deltaY < 0 && !atTop) {
+        section.scrollTop += e.deltaY;
+        e.stopPropagation();
+      }
+    }, true);
   </script>
 </body>
 </html>
